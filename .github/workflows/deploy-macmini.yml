@@ -1,0 +1,54 @@
+name: Deploy Mac mini
+
+on:
+  push:
+    branches:
+      - main
+
+concurrency:
+  group: mcp-korean-stock-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    if: github.ref == 'refs/heads/main'
+    runs-on: [self-hosted, macmini]
+    env:
+      APP_ROOT: ${{ runner.home }}/services/mcp-korean-stock
+      RELEASE_DIR: ${{ runner.home }}/services/mcp-korean-stock/releases/${{ github.sha }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Prepare release directory
+        run: |
+          mkdir -p "$RELEASE_DIR"
+          rsync -a --delete ./ "$RELEASE_DIR/"
+      - name: Install dependencies
+        run: |
+          python -m venv "$RELEASE_DIR/.venv"
+          "$RELEASE_DIR/.venv/bin/pip" install --upgrade pip
+          "$RELEASE_DIR/.venv/bin/pip" install -e "$RELEASE_DIR"
+      - name: Verify environment file
+        run: |
+          test -f "$APP_ROOT/shared/.env"
+      - name: Smoke test
+        run: |
+          "$RELEASE_DIR/.venv/bin/python" -c "from korean_stock_mcp.server import build_registry; build_registry()"
+      - name: Switch current release
+        run: |
+          mkdir -p "$APP_ROOT/releases" "$APP_ROOT/shared/logs"
+          ln -sfn "$RELEASE_DIR" "$APP_ROOT/current"
+      - name: Render launchd plist
+        run: |
+          sh "$APP_ROOT/current/deploy/render_launchd.sh" "$APP_ROOT" "$APP_ROOT/shared/com.ctk03272.mcp-korean-stock.plist"
+      - name: Restart launchd service
+        run: |
+          launchctl kickstart -k "gui/$(id -u)/com.ctk03272.mcp-korean-stock" || launchctl bootstrap "gui/$(id -u)" "$APP_ROOT/shared/com.ctk03272.mcp-korean-stock.plist"
+      - name: Health check
+        run: |
+          curl --fail --silent http://127.0.0.1:8000/healthz
+      - name: Prune old releases
+        run: |
+          ls -1dt "$APP_ROOT"/releases/* | tail -n +4 | xargs rm -rf || true

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+  <dict>
+    <key>Label</key>
+    <string>com.ctk03272.mcp-korean-stock</string>
+    <key>ProgramArguments</key>
+    <array>
+      <string>__PYTHON_BIN__</string>
+      <string>-m</string>
+      <string>korean_stock_mcp.server</string>
+    </array>
+    <key>EnvironmentVariables</key>
+    <dict>
+      <key>MCP_TRANSPORT</key>
+      <string>http</string>
+      <key>MCP_HOST</key>
+      <string>127.0.0.1</string>
+      <key>MCP_PORT</key>
+      <string>8000</string>
+      <key>MARKET_TZ</key>
+      <string>Asia/Seoul</string>
+    </dict>
+    <key>KeepAlive</key>
+    <true/>
+    <key>RunAtLoad</key>
+    <true/>
+    <key>WorkingDirectory</key>
+    <string>__APP_ROOT__/current</string>
+    <key>StandardOutPath</key>
+    <string>__APP_ROOT__/shared/logs/stdout.log</string>
+    <key>StandardErrorPath</key>
+    <string>__APP_ROOT__/shared/logs/stderr.log</string>
+  </dict>
+</plist>
