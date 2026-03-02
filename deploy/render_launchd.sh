@@ -8,5 +8,5 @@ mkdir -p "$(dirname "$OUTPUT_PATH")"
 
 sed \
   -e "s|__APP_ROOT__|$APP_ROOT|g" \
-  -e "s|__PYTHON_BIN__|$APP_ROOT/current/.venv/bin/python|g" \
+  -e "s|__RUNNER_SCRIPT__|$APP_ROOT/current/deploy/run_server.sh|g" \
   "$APP_ROOT/current/deploy/launchd/com.ctk03272.mcp-korean-stock.plist" > "$OUTPUT_PATH"

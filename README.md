@@ -93,6 +93,7 @@ Production runtime expects:
 - `MCP_TRANSPORT=http`
 - host-local `.env`
 - deployment root under `/Users/<runner-user>/services/mcp-korean-stock`
+- `launchd` starts the service through `deploy/run_server.sh`, which loads `shared/.env` before executing Python
 
 ## Notes
 

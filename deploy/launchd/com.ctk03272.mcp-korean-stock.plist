@@ -6,21 +6,10 @@
     <string>com.ctk03272.mcp-korean-stock</string>
     <key>ProgramArguments</key>
     <array>
-      <string>__PYTHON_BIN__</string>
-      <string>-m</string>
-      <string>korean_stock_mcp.server</string>
+      <string>/bin/sh</string>
+      <string>__RUNNER_SCRIPT__</string>
+      <string>__APP_ROOT__</string>
     </array>
-    <key>EnvironmentVariables</key>
-    <dict>
-      <key>MCP_TRANSPORT</key>
-      <string>http</string>
-      <key>MCP_HOST</key>
-      <string>127.0.0.1</string>
-      <key>MCP_PORT</key>
-      <string>8000</string>
-      <key>MARKET_TZ</key>
-      <string>Asia/Seoul</string>
-    </dict>
     <key>KeepAlive</key>
     <true/>
     <key>RunAtLoad</key>
